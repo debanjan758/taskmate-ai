@@ -45,13 +45,13 @@ Rules:
   try {
     const result = await model.generateContent(prompt);
     const response = result.response.text();
-    
+
     // Remove markdown code blocks if present
     let cleaned = response.trim();
-    if (cleaned.startsWith('```')) {
-      cleaned = cleaned.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+    if (cleaned.startsWith("```")) {
+      cleaned = cleaned.replace(/```json\n?/g, "").replace(/```\n?/g, "");
     }
-    
+
     const parsed = JSON.parse(cleaned);
     return parsed;
   } catch (error) {
@@ -85,12 +85,12 @@ Priority levels: critical (90-100), high (70-89), medium (40-69), low (0-39)
   try {
     const result = await model.generateContent(prompt);
     const response = result.response.text();
-    
+
     let cleaned = response.trim();
-    if (cleaned.startsWith('```')) {
-      cleaned = cleaned.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+    if (cleaned.startsWith("```")) {
+      cleaned = cleaned.replace(/```json\n?/g, "").replace(/```\n?/g, "");
     }
-    
+
     return JSON.parse(cleaned);
   } catch (error) {
     console.error("Error calculating priority:", error);
@@ -98,7 +98,7 @@ Priority levels: critical (90-100), high (70-89), medium (40-69), low (0-39)
     return {
       priorityScore: 50,
       level: "medium",
-      reasoning: "Default priority assigned"
+      reasoning: "Default priority assigned",
     };
   }
 }
@@ -108,16 +108,18 @@ Priority levels: critical (90-100), high (70-89), medium (40-69), low (0-39)
  */
 export async function testGeminiConnection() {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash",
+    });
     const result = await model.generateContent("Say hello!");
     return {
       success: true,
-      message: result.response.text()
+      message: result.response.text(),
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Unknown error"
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
