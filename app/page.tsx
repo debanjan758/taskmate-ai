@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
+import DeadlineAlert from '@/components/DeadlineAlert';
+
 import { ArrowRight, CheckCircle2, Brain, Calendar, Zap } from "lucide-react";
 
 export default function Home() {

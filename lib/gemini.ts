@@ -12,7 +12,9 @@ const genAI = new GoogleGenerativeAI(apiKey);
  * Extract structured task information from natural language input
  */
 export async function extractTaskFromInput(userInput: string) {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  console.log("🤖 AI Processing: extractTaskFromInput");
+
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
 You are a task management AI assistant. Extract structured task information from user input.
@@ -64,7 +66,9 @@ Rules:
  * Calculate priority score for a task
  */
 export async function calculatePriority(task: any, context?: any) {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  console.log("🤖 AI Processing: calculatePriority");
+
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
 Analyze this task and calculate a priority score.
@@ -107,6 +111,8 @@ Priority levels: critical (90-100), high (70-89), medium (40-69), low (0-39)
  * Test connection to Gemini API
  */
 export async function testGeminiConnection() {
+  console.log("🤖 AI Processing: testGeminiConnection");
+  
   try {
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
@@ -131,7 +137,9 @@ export async function breakdownTask(task: {
   description: string;
   estimatedDuration: number;
 }): Promise<string[]> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  console.log("🤖 AI Processing: breakdownTask");
+
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
 Break down this task into 3-5 specific, actionable subtasks.
@@ -152,12 +160,12 @@ Make subtasks:
   try {
     const result = await model.generateContent(prompt);
     const response = result.response.text();
-    
+
     let cleaned = response.trim();
-    if (cleaned.startsWith('```')) {
-      cleaned = cleaned.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+    if (cleaned.startsWith("```")) {
+      cleaned = cleaned.replace(/```json\n?/g, "").replace(/```\n?/g, "");
     }
-    
+
     const subtasks = JSON.parse(cleaned);
     return Array.isArray(subtasks) ? subtasks : [];
   } catch (error) {
@@ -165,7 +173,7 @@ Make subtasks:
     return [
       "Review task requirements",
       "Complete main work",
-      "Review and finalize"
+      "Review and finalize",
     ];
   }
 }
@@ -175,18 +183,21 @@ Make subtasks:
  */
 export async function calculateEnhancedPriority(
   task: any,
-  allTasks: any[] = []
+  allTasks: any[] = [],
 ): Promise<{
   priorityScore: number;
-  level: 'critical' | 'high' | 'medium' | 'low';
+  level: "critical" | "high" | "medium" | "low";
   reasoning: string;
   urgencyFactors: string[];
 }> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  console.log("🤖 AI Processing: calculateEnhancedPriority");
+  console.log("⏳ Analyzing urgency...");
+  console.log("✅ Priority analysis complete");
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const now = new Date();
   const deadline = task.deadline ? new Date(task.deadline) : null;
-  const hoursUntilDeadline = deadline 
+  const hoursUntilDeadline = deadline
     ? Math.round((deadline.getTime() - now.getTime()) / (1000 * 60 * 60))
     : null;
 
@@ -195,11 +206,11 @@ Analyze this task and calculate a priority score (0-100).
 
 Task Details:
 - Title: ${task.title}
-- Description: ${task.description || 'None'}
+- Description: ${task.description || "None"}
 - Category: ${task.category}
 - Estimated Duration: ${task.estimatedDuration} minutes
-- Deadline: ${deadline ? deadline.toISOString() : 'No deadline'}
-- Hours Until Deadline: ${hoursUntilDeadline || 'N/A'}
+- Deadline: ${deadline ? deadline.toISOString() : "No deadline"}
+- Hours Until Deadline: ${hoursUntilDeadline || "N/A"}
 
 Current Context:
 - Current Time: ${now.toISOString()}
@@ -229,41 +240,41 @@ Priority levels:
   try {
     const result = await model.generateContent(prompt);
     const response = result.response.text();
-    
+
     let cleaned = response.trim();
-    if (cleaned.startsWith('```')) {
-      cleaned = cleaned.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+    if (cleaned.startsWith("```")) {
+      cleaned = cleaned.replace(/```json\n?/g, "").replace(/```\n?/g, "");
     }
-    
+
     return JSON.parse(cleaned);
   } catch (error) {
     console.error("Error calculating priority:", error);
-    
+
     // Fallback calculation
     let score = 50;
-    let level: 'critical' | 'high' | 'medium' | 'low' = 'medium';
-    
+    let level: "critical" | "high" | "medium" | "low" = "medium";
+
     if (hoursUntilDeadline !== null) {
       if (hoursUntilDeadline < 4) {
         score = 95;
-        level = 'critical';
+        level = "critical";
       } else if (hoursUntilDeadline < 24) {
         score = 80;
-        level = 'high';
+        level = "high";
       } else if (hoursUntilDeadline < 72) {
         score = 60;
-        level = 'medium';
+        level = "medium";
       } else {
         score = 40;
-        level = 'low';
+        level = "low";
       }
     }
-    
+
     return {
       priorityScore: score,
       level,
       reasoning: "Default priority based on deadline proximity",
-      urgencyFactors: ["Deadline-based calculation"]
+      urgencyFactors: ["Deadline-based calculation"],
     };
   }
 }
@@ -273,14 +284,20 @@ Priority levels:
  */
 export async function suggestTimeSlots(
   task: any,
-  workHours: { start: string; end: string } = { start: "09:00", end: "17:00" }
-): Promise<{
-  startTime: string;
-  endTime: string;
-  reasoning: string;
-  conflictLevel: 'none' | 'low' | 'medium' | 'high';
-}[]> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  workHours: { start: string; end: string } = { start: "09:00", end: "17:00" },
+): Promise<
+  {
+    startTime: string;
+    endTime: string;
+    reasoning: string;
+    conflictLevel: "none" | "low" | "medium" | "high";
+  }[]
+> {
+  console.log("🤖 AI Processing: suggestTimeSlots");
+  console.log("⏳ Finding optimal schedule...");
+  console.log("✅ Time slots generated");
+
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const now = new Date();
   const deadline = task.deadline ? new Date(task.deadline) : null;
@@ -291,8 +308,8 @@ Suggest 3 optimal time slots for completing this task.
 Task:
 - Title: ${task.title}
 - Duration: ${task.estimatedDuration} minutes
-- Deadline: ${deadline ? deadline.toISOString() : 'Flexible'}
-- Priority: ${task.priority?.level || 'medium'}
+- Deadline: ${deadline ? deadline.toISOString() : "Flexible"}
+- Priority: ${task.priority?.level || "medium"}
 
 Context:
 - Current Time: ${now.toISOString()}
@@ -319,31 +336,31 @@ Consider:
   try {
     const result = await model.generateContent(prompt);
     const response = result.response.text();
-    
+
     let cleaned = response.trim();
-    if (cleaned.startsWith('```')) {
-      cleaned = cleaned.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+    if (cleaned.startsWith("```")) {
+      cleaned = cleaned.replace(/```json\n?/g, "").replace(/```\n?/g, "");
     }
-    
+
     const slots = JSON.parse(cleaned);
     return Array.isArray(slots) ? slots.slice(0, 3) : [];
   } catch (error) {
     console.error("Error suggesting time slots:", error);
-    
+
     // Fallback: suggest next available slots
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(9, 0, 0, 0);
-    
+
     const duration = task.estimatedDuration || 60;
-    
+
     return [
       {
         startTime: tomorrow.toISOString(),
         endTime: new Date(tomorrow.getTime() + duration * 60000).toISOString(),
         reasoning: "Tomorrow morning - fresh start",
-        conflictLevel: 'none' as const
-      }
+        conflictLevel: "none" as const,
+      },
     ];
   }
 }
@@ -352,13 +369,17 @@ Consider:
  * Get AI tips for completing a task
  */
 export async function getTaskTips(task: any): Promise<string[]> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  console.log("🤖 AI Processing: getTaskTips");
+  console.log("⏳ Generating productivity tips...");
+  console.log("✅ Tips generated");
+
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
 Provide 3 helpful tips for completing this task efficiently.
 
 Task: ${task.title}
-Description: ${task.description || 'None'}
+Description: ${task.description || "None"}
 Category: ${task.category}
 Duration: ${task.estimatedDuration} minutes
 
@@ -374,12 +395,12 @@ Tips should be:
   try {
     const result = await model.generateContent(prompt);
     const response = result.response.text();
-    
+
     let cleaned = response.trim();
-    if (cleaned.startsWith('```')) {
-      cleaned = cleaned.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+    if (cleaned.startsWith("```")) {
+      cleaned = cleaned.replace(/```json\n?/g, "").replace(/```\n?/g, "");
     }
-    
+
     const tips = JSON.parse(cleaned);
     return Array.isArray(tips) ? tips : [];
   } catch (error) {
@@ -387,7 +408,7 @@ Tips should be:
     return [
       "Break the task into smaller steps",
       "Eliminate distractions before starting",
-      "Set a timer to maintain focus"
+      "Set a timer to maintain focus",
     ];
   }
 }

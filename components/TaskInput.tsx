@@ -1,66 +1,80 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Send } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import VoiceInput from './VoiceInput';
-import toast from 'react-hot-toast';
-import { extractTaskFromInput } from '@/lib/gemini';
-import { createTask } from '@/lib/taskService';
+import { extractTaskFromInput, calculateEnhancedPriority } from "@/lib/gemini";
+import { useState } from "react";
+import { Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import VoiceInput from "./VoiceInput";
+import toast from "react-hot-toast";
+import { createTask } from "@/lib/taskService";
 
 interface TaskInputProps {
   onTaskCreated?: () => void;
 }
 
 export default function TaskInput({ onTaskCreated }: TaskInputProps) {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (text: string) => {
     if (!text.trim()) {
-      toast.error('Please enter a task');
+      toast.error("Please enter a task");
       return;
     }
 
     setLoading(true);
-    const loadingToast = toast.loading('AI is analyzing your task...');
+    const loadingToast = toast.loading("AI is analyzing your task...");
 
     try {
       // Extract task using Gemini AI
       const extracted = await extractTaskFromInput(text);
-      
+
       if (!extracted.tasks || extracted.tasks.length === 0) {
-        throw new Error('Could not understand the task');
+        throw new Error("Could not understand the task");
       }
 
-      // Create tasks in Firestore
+      // Import at top of file
+      // import { calculateEnhancedPriority } from '@/lib/gemini';
+
+      // Create tasks in Firestore with AI-calculated priority
       for (const task of extracted.tasks) {
-        await createTask({
+        // Calculate priority with AI
+        const priorityResult = await calculateEnhancedPriority({
           title: task.title,
-          description: task.description || '',
+          description: task.description || "",
           deadline: task.deadline ? new Date(task.deadline) : null,
           estimatedDuration: task.estimatedDuration || 60,
-          category: task.category || 'other',
+          category: task.category || "other",
+        });
+
+        await createTask({
+          title: task.title,
+          description: task.description || "",
+          deadline: task.deadline ? new Date(task.deadline) : null,
+          estimatedDuration: task.estimatedDuration || 60,
+          category: task.category || "other",
           priority: {
-            score: 50,
-            level: task.priority as any || 'medium',
-            reasoning: 'Initial priority'
-          }
+            score: priorityResult.priorityScore,
+            level: priorityResult.level,
+            reasoning: priorityResult.reasoning,
+          },
         });
       }
 
-      toast.success(`Created ${extracted.tasks.length} task(s)!`, {
-        id: loadingToast
-      });
-      
-      setInput('');
+      toast.success(
+        `Created ${extracted.tasks.length} task(s) with AI priority!`,
+        {
+          id: loadingToast,
+        },
+      );
+
+      setInput("");
       onTaskCreated?.();
-      
     } catch (error) {
-      console.error('Error creating task:', error);
-      toast.error('Failed to create task. Please try again.', {
-        id: loadingToast
+      console.error("Error creating task:", error);
+      toast.error("Failed to create task. Please try again.", {
+        id: loadingToast,
       });
     } finally {
       setLoading(false);
@@ -69,7 +83,7 @@ export default function TaskInput({ onTaskCreated }: TaskInputProps) {
 
   const handleVoiceTranscript = (transcript: string) => {
     setInput(transcript);
-    toast.success('Voice input captured!');
+    toast.success("Voice input captured!");
   };
 
   return (
@@ -79,9 +93,11 @@ export default function TaskInput({ onTaskCreated }: TaskInputProps) {
           <Input
             type="text"
             value={input}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setInput(e.target.value)
+            }
             onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
-              if (e.key === 'Enter' && !loading) {
+              if (e.key === "Enter" && !loading) {
                 handleSubmit(input);
               }
             }}
@@ -91,10 +107,7 @@ export default function TaskInput({ onTaskCreated }: TaskInputProps) {
           />
         </div>
 
-        <VoiceInput 
-          onTranscript={handleVoiceTranscript}
-          disabled={loading}
-        />
+        <VoiceInput onTranscript={handleVoiceTranscript} disabled={loading} />
 
         <Button
           onClick={() => handleSubmit(input)}

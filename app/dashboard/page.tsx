@@ -1,17 +1,20 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Toaster } from 'react-hot-toast';
-import toast from 'react-hot-toast';
-import TaskInput from '@/components/TaskInput';
-import TaskList from '@/components/TaskList';
-import { 
-  getAllTasks, 
-  updateTaskStatus, 
+import ProductivityStats from "@/components/ProductivityStats";
+import { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import TaskInput from "@/components/TaskInput";
+import TaskList from "@/components/TaskList";
+import NextTaskSuggestion from "@/components/NextTaskSuggestion";
+import DeadlineAlert from "@/components/DeadlineAlert";
+import {
+  getAllTasks,
+  updateTaskStatus,
   deleteTask,
-  updateTask 
-} from '@/lib/taskService';
-import type { Task } from '@/lib/types';
+  updateTask,
+} from "@/lib/taskService";
+import type { Task } from "@/lib/types";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -22,8 +25,8 @@ export default function Dashboard() {
       const fetchedTasks = await getAllTasks();
       setTasks(fetchedTasks);
     } catch (error) {
-      console.error('Error loading tasks:', error);
-      toast.error('Failed to load tasks');
+      console.error("Error loading tasks:", error);
+      toast.error("Failed to load tasks");
     } finally {
       setLoading(false);
     }
@@ -33,48 +36,67 @@ export default function Dashboard() {
     loadTasks();
   }, []);
 
-  const handleStatusChange = async (taskId: string, status: Task['status']) => {
+  const handleStatusChange = async (taskId: string, status: Task["status"]) => {
     try {
       await updateTaskStatus(taskId, status);
-      toast.success('Task updated!');
+      toast.success("Task updated!");
       await loadTasks();
     } catch (error) {
-      toast.error('Failed to update task');
+      toast.error("Failed to update task");
     }
   };
 
   const handleDelete = async (taskId: string) => {
-    if (!confirm('Are you sure you want to delete this task?')) return;
+    if (!confirm("Are you sure you want to delete this task?")) return;
 
     try {
       await deleteTask(taskId);
-      toast.success('Task deleted');
+      toast.success("Task deleted");
       await loadTasks();
     } catch (error) {
-      toast.error('Failed to delete task');
+      toast.error("Failed to delete task");
     }
   };
 
   const handleUpdate = async (taskId: string, updates: Partial<Task>) => {
     try {
       await updateTask(taskId, updates);
-      toast.success('Task updated!');
+      toast.success("Task updated!");
       await loadTasks();
     } catch (error) {
-      toast.error('Failed to update task');
+      toast.error("Failed to update task");
     }
   };
 
+  {
+    /* AI Suggestion - What to do next */
+  }
+  {
+    !loading && tasks.length > 0 && (
+      <div className="mb-8">
+        <NextTaskSuggestion
+          tasks={tasks}
+          onStartTask={(taskId) => handleStatusChange(taskId, "in-progress")}
+        />
+      </div>
+    );
+  }
+
   // Calculate high priority count
   const highPriorityCount = tasks.filter(
-    t => t.status !== 'completed' && 
-    (t.priority.level === 'critical' || t.priority.level === 'high')
+    (t) =>
+      t.status !== "completed" &&
+      (t.priority.level === "critical" || t.priority.level === "high"),
   ).length;
+
+  {
+    /* Enhanced Stats */
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <Toaster position="top-right" />
-      
+
       <div className="max-w-7xl mx-auto p-6 md:p-8">
         {/* Header */}
         <header className="mb-8">
@@ -91,25 +113,31 @@ export default function Dashboard() {
           <TaskInput onTaskCreated={loadTasks} />
         </div>
 
+        {!loading && (
+          <div className="mb-8">
+            <ProductivityStats tasks={tasks} />
+          </div>
+        )}
+
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl font-bold text-blue-600">
-              {tasks.filter(t => t.status === 'pending').length}
+              {tasks.filter((t) => t.status === "pending").length}
             </div>
             <div className="text-sm text-gray-600">Pending Tasks</div>
           </div>
 
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl font-bold text-purple-600">
-              {tasks.filter(t => t.status === 'in-progress').length}
+              {tasks.filter((t) => t.status === "in-progress").length}
             </div>
             <div className="text-sm text-gray-600">In Progress</div>
           </div>
 
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl font-bold text-green-600">
-              {tasks.filter(t => t.status === 'completed').length}
+              {tasks.filter((t) => t.status === "completed").length}
             </div>
             <div className="text-sm text-gray-600">Completed</div>
           </div>
@@ -118,9 +146,18 @@ export default function Dashboard() {
             <div className="text-2xl font-bold text-red-600">
               {highPriorityCount}
             </div>
-            <div className="text-sm text-red-700 font-medium">High Priority</div>
+            <div className="text-sm text-red-700 font-medium">
+              High Priority
+            </div>
           </div>
         </div>
+
+        {/* Deadline Alerts */}
+        {!loading && tasks.length > 0 && (
+          <div className="mb-8">
+            <DeadlineAlert tasks={tasks} />
+          </div>
+        )}
 
         {/* Task List */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
