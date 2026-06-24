@@ -1,5 +1,7 @@
 "use client";
 
+import MoodSelector from "@/components/MoodSelector";
+import ProductivityInsights from "@/components/ProductivityInsights";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
@@ -100,6 +102,16 @@ export default function Dashboard() {
           <TaskInput onTaskCreated={loadTasks} />
         </div>
 
+        {/* 🌟 UNIQUE: Mood-Based Task Selector */}
+        <div className="mb-8">
+          <MoodSelector
+            tasks={tasks}
+            onTaskSelected={(task) => {
+              window.location.href = `/task/${task.id}`;
+            }}
+          />
+        </div>
+
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
@@ -132,6 +144,13 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        {/* 🌟 UNIQUE: Productivity Insights */}
+        {!loading && tasks.length > 0 && (
+          <div className="mb-8">
+            <ProductivityInsights tasks={tasks} />
+          </div>
+        )}
 
         {/* Task List */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
