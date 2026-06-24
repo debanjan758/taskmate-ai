@@ -118,3 +118,27 @@ export async function updateTask(
     throw error;
   }
 }
+/**
+ * Update task with AI suggestions
+ */
+export async function updateTaskWithAI(
+  taskId: string,
+  aiSuggestions: any
+): Promise<void> {
+  try {
+    const taskRef = doc(db, TASKS_COLLECTION, taskId);
+    await updateDoc(taskRef, {
+      aiSuggestions: {
+        scheduledTime: aiSuggestions.scheduledTime ? 
+          Timestamp.fromDate(aiSuggestions.scheduledTime) : null,
+        breakdownSteps: aiSuggestions.breakdownSteps || [],
+        recommendedDuration: aiSuggestions.recommendedDuration,
+        tips: aiSuggestions.tips || []
+      },
+      updatedAt: Timestamp.fromDate(new Date()),
+    });
+  } catch (error) {
+    console.error('Error updating task with AI:', error);
+    throw error;
+  }
+}

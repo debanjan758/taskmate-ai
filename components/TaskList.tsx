@@ -5,9 +5,15 @@ interface TaskListProps {
   tasks: Task[];
   onStatusChange?: (taskId: string, status: Task['status']) => void;
   onDelete?: (taskId: string) => void;
+  onUpdate?: (taskId: string, updates: Partial<Task>) => void;
 }
 
-export default function TaskList({ tasks, onStatusChange, onDelete }: TaskListProps) {
+export default function TaskList({ 
+  tasks, 
+  onStatusChange, 
+  onDelete,
+  onUpdate 
+}: TaskListProps) {
   if (tasks.length === 0) {
     return (
       <div className="text-center py-12">
@@ -41,8 +47,10 @@ export default function TaskList({ tasks, onStatusChange, onDelete }: TaskListPr
               <TaskCard
                 key={task.id}
                 task={task}
+                allTasks={tasks}
                 onStatusChange={onStatusChange}
                 onDelete={onDelete}
+                onUpdate={onUpdate}
               />
             ))}
           </div>
@@ -60,8 +68,10 @@ export default function TaskList({ tasks, onStatusChange, onDelete }: TaskListPr
               <TaskCard
                 key={task.id}
                 task={task}
+                allTasks={tasks}
                 onStatusChange={onStatusChange}
                 onDelete={onDelete}
+                onUpdate={onUpdate}
               />
             ))}
           </div>
@@ -79,8 +89,10 @@ export default function TaskList({ tasks, onStatusChange, onDelete }: TaskListPr
               <TaskCard
                 key={task.id}
                 task={task}
+                allTasks={tasks}
                 onStatusChange={onStatusChange}
                 onDelete={onDelete}
+                onUpdate={onUpdate}
               />
             ))}
           </div>

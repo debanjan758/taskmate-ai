@@ -5,7 +5,12 @@ import { Toaster } from 'react-hot-toast';
 import toast from 'react-hot-toast';
 import TaskInput from '@/components/TaskInput';
 import TaskList from '@/components/TaskList';
-import { getAllTasks, updateTaskStatus, deleteTask } from '@/lib/taskService';
+import { 
+  getAllTasks, 
+  updateTaskStatus, 
+  deleteTask,
+  updateTask 
+} from '@/lib/taskService';
 import type { Task } from '@/lib/types';
 
 export default function Dashboard() {
@@ -50,6 +55,22 @@ export default function Dashboard() {
     }
   };
 
+  const handleUpdate = async (taskId: string, updates: Partial<Task>) => {
+    try {
+      await updateTask(taskId, updates);
+      toast.success('Task updated!');
+      await loadTasks();
+    } catch (error) {
+      toast.error('Failed to update task');
+    }
+  };
+
+  // Calculate high priority count
+  const highPriorityCount = tasks.filter(
+    t => t.status !== 'completed' && 
+    (t.priority.level === 'critical' || t.priority.level === 'high')
+  ).length;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <Toaster position="top-right" />
@@ -71,7 +92,7 @@ export default function Dashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl font-bold text-blue-600">
               {tasks.filter(t => t.status === 'pending').length}
@@ -92,6 +113,13 @@ export default function Dashboard() {
             </div>
             <div className="text-sm text-gray-600">Completed</div>
           </div>
+
+          <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-lg p-4 shadow-sm border border-red-100">
+            <div className="text-2xl font-bold text-red-600">
+              {highPriorityCount}
+            </div>
+            <div className="text-sm text-red-700 font-medium">High Priority</div>
+          </div>
         </div>
 
         {/* Task List */}
@@ -106,6 +134,7 @@ export default function Dashboard() {
               tasks={tasks}
               onStatusChange={handleStatusChange}
               onDelete={handleDelete}
+              onUpdate={handleUpdate}
             />
           )}
         </div>
