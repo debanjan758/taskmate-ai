@@ -1,13 +1,12 @@
 "use client";
 
-import ProductivityStats from "@/components/ProductivityStats";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
 import TaskInput from "@/components/TaskInput";
 import TaskList from "@/components/TaskList";
-import NextTaskSuggestion from "@/components/NextTaskSuggestion";
-import DeadlineAlert from "@/components/DeadlineAlert";
+import ChatAssistant from "@/components/ChatAssistant"; // 👈 ADD THIS IMPORT
+import MotivationalBanner from "@/components/MotivationalBanner";
 import {
   getAllTasks,
   updateTaskStatus,
@@ -68,30 +67,11 @@ export default function Dashboard() {
     }
   };
 
-  {
-    /* AI Suggestion - What to do next */
-  }
-  {
-    !loading && tasks.length > 0 && (
-      <div className="mb-8">
-        <NextTaskSuggestion
-          tasks={tasks}
-          onStartTask={(taskId) => handleStatusChange(taskId, "in-progress")}
-        />
-      </div>
-    );
-  }
-
-  // Calculate high priority count
   const highPriorityCount = tasks.filter(
     (t) =>
       t.status !== "completed" &&
       (t.priority.level === "critical" || t.priority.level === "high"),
   ).length;
-
-  {
-    /* Enhanced Stats */
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -108,16 +88,17 @@ export default function Dashboard() {
           </p>
         </header>
 
+        {/* Motivational Banner */}
+        {!loading && tasks.length > 0 && (
+          <div className="mb-6">
+            <MotivationalBanner tasks={tasks} />
+          </div>
+        )}
+
         {/* Task Input */}
         <div className="mb-8">
           <TaskInput onTaskCreated={loadTasks} />
         </div>
-
-        {!loading && (
-          <div className="mb-8">
-            <ProductivityStats tasks={tasks} />
-          </div>
-        )}
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -152,13 +133,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Deadline Alerts */}
-        {!loading && tasks.length > 0 && (
-          <div className="mb-8">
-            <DeadlineAlert tasks={tasks} />
-          </div>
-        )}
-
         {/* Task List */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           {loading ? (
@@ -176,6 +150,9 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+
+      {/* 👇 FLOATING CHAT ASSISTANT - ADDED HERE 👇 */}
+      <ChatAssistant allTasks={tasks} />
     </div>
   );
 }

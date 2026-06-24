@@ -1,49 +1,51 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import PriorityBadge from './PriorityBadge';
-import SmartScheduler from './SmartScheduler';
-import AIInsights from './AIInsights';
-import PriorityAnalyzer from './PriorityAnalyzer';
-import { 
-  Clock, 
-  Calendar, 
-  CheckCircle2, 
-  Trash2, 
-  Play,
+import { useRouter } from "next/navigation";
+import { ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import PriorityBadge from "./PriorityBadge";
+import SmartScheduler from "./SmartScheduler";
+import AIInsights from "./AIInsights";
+import PriorityAnalyzer from "./PriorityAnalyzer";
+import {
+  Clock,
+  Calendar,
+  CheckCircle2,
+  Trash2,
   ChevronDown,
-  ChevronUp 
-} from 'lucide-react';
-import { format } from 'date-fns';
-import type { Task } from '@/lib/types';
+  ChevronUp,
+} from "lucide-react";
+import { format } from "date-fns";
+import type { Task } from "@/lib/types";
 
 interface TaskCardProps {
   task: Task;
   allTasks?: Task[];
-  onStatusChange?: (taskId: string, status: Task['status']) => void;
+  onStatusChange?: (taskId: string, status: Task["status"]) => void;
   onDelete?: (taskId: string) => void;
   onUpdate?: (taskId: string, updates: Partial<Task>) => void;
 }
 
-export default function TaskCard({ 
-  task, 
+export default function TaskCard({
+  task,
   allTasks = [],
-  onStatusChange, 
+  onStatusChange,
   onDelete,
-  onUpdate 
+  onUpdate,
 }: TaskCardProps) {
+  const router = useRouter();
   const [expanded, setExpanded] = useState(false);
-  const isCompleted = task.status === 'completed';
+  const isCompleted = task.status === "completed";
 
   const handleSchedule = (startTime: Date) => {
     if (onUpdate) {
       onUpdate(task.id, {
         aiSuggestions: {
           ...task.aiSuggestions,
-          scheduledTime: startTime
-        }
+          scheduledTime: startTime,
+        },
       });
     }
   };
@@ -55,15 +57,17 @@ export default function TaskCard({
   };
 
   return (
-    <Card className={`p-4 hover:shadow-md transition-all ${
-      isCompleted ? 'opacity-60 bg-gray-50' : ''
-    }`}>
+    <Card
+      className={`p-4 hover:shadow-md transition-all ${
+        isCompleted ? "opacity-60 bg-gray-50" : ""
+      }`}
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           {/* Header */}
           <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <PriorityBadge 
-              level={task.priority.level} 
+            <PriorityBadge
+              level={task.priority.level}
               score={task.priority.score}
             />
             <span className="text-xs text-gray-500 capitalize">
@@ -77,17 +81,17 @@ export default function TaskCard({
           </div>
 
           {/* Title */}
-          <h3 className={`text-lg font-semibold mb-2 ${
-            isCompleted ? 'line-through text-gray-500' : ''
-          }`}>
+          <h3
+            className={`text-lg font-semibold mb-2 ${
+              isCompleted ? "line-through text-gray-500" : ""
+            }`}
+          >
             {task.title}
           </h3>
 
           {/* Description */}
           {task.description && (
-            <p className="text-sm text-gray-600 mb-3">
-              {task.description}
-            </p>
+            <p className="text-sm text-gray-600 mb-3">{task.description}</p>
           )}
 
           {/* Metadata */}
@@ -95,10 +99,10 @@ export default function TaskCard({
             {task.deadline && (
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                <span>{format(task.deadline, 'MMM dd, h:mm a')}</span>
+                <span>{format(task.deadline, "MMM dd, h:mm a")}</span>
               </div>
             )}
-            
+
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
               <span>{task.estimatedDuration} min</span>
@@ -108,7 +112,8 @@ export default function TaskCard({
               <div className="flex items-center gap-1 text-purple-600">
                 <Calendar className="w-4 h-4" />
                 <span>
-                  Scheduled: {format(task.aiSuggestions.scheduledTime, 'MMM dd, h:mm a')}
+                  Scheduled:{" "}
+                  {format(task.aiSuggestions.scheduledTime, "MMM dd, h:mm a")}
                 </span>
               </div>
             )}
@@ -125,14 +130,21 @@ export default function TaskCard({
           {task.subtasks && task.subtasks.length > 0 && (
             <div className="mb-3 space-y-1">
               {task.subtasks.map((subtask) => (
-                <div key={subtask.id} className="flex items-center gap-2 text-sm">
+                <div
+                  key={subtask.id}
+                  className="flex items-center gap-2 text-sm"
+                >
                   <input
                     type="checkbox"
                     checked={subtask.completed}
                     className="rounded"
                     readOnly
                   />
-                  <span className={subtask.completed ? 'line-through text-gray-500' : ''}>
+                  <span
+                    className={
+                      subtask.completed ? "line-through text-gray-500" : ""
+                    }
+                  >
                     {subtask.title}
                   </span>
                 </div>
@@ -166,8 +178,8 @@ export default function TaskCard({
           {expanded && !isCompleted && (
             <div className="mt-4 space-y-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
               <SmartScheduler task={task} onSchedule={handleSchedule} />
-              <PriorityAnalyzer 
-                task={task} 
+              <PriorityAnalyzer
+                task={task}
                 allTasks={allTasks}
                 onPriorityUpdate={handlePriorityUpdate}
               />
@@ -182,17 +194,18 @@ export default function TaskCard({
             <>
               <Button
                 size="sm"
-                variant="outline"
-                onClick={() => onStatusChange?.(task.id, 'in-progress')}
+                variant="default"
+                onClick={() => router.push(`/task/${task.id}`)}
+                className="gap-2"
               >
-                <Play className="w-4 h-4 mr-1" />
-                Start
+                <ExternalLink className="w-4 h-4" />
+                Focus Mode
               </Button>
-              
+
               <Button
                 size="sm"
-                variant="default"
-                onClick={() => onStatusChange?.(task.id, 'completed')}
+                variant="outline"
+                onClick={() => onStatusChange?.(task.id, "completed")}
               >
                 <CheckCircle2 className="w-4 h-4 mr-1" />
                 Done
@@ -202,7 +215,7 @@ export default function TaskCard({
             <Button
               size="sm"
               variant="outline"
-              onClick={() => onStatusChange?.(task.id, 'pending')}
+              onClick={() => onStatusChange?.(task.id, "pending")}
             >
               Undo
             </Button>
