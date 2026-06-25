@@ -110,34 +110,37 @@ export default function ChatAssistant({ currentTask, allTasks = [] }: ChatAssist
       <Button
         onClick={() => setIsOpen(true)}
         size="lg"
-        className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-lg bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 z-50"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 z-50 transition-all duration-200 hover:scale-110 active:scale-95 animate-pulseGlow"
       >
-        <MessageCircle className="w-6 h-6" />
+        <MessageCircle className="w-5 h-5 md:w-6 md:h-6" />
       </Button>
     );
   }
 
   return (
-    <Card className={`fixed bottom-6 right-6 shadow-2xl z-50 transition-all ${
-      isMinimized ? 'w-80 h-16' : 'w-96 h-[600px]'
-    }`}>
+    <Card className={`fixed shadow-2xl z-50 transition-all duration-300 animate-slideUp
+      ${isMinimized 
+        ? 'bottom-4 right-4 w-[90vw] max-w-xs h-14' 
+        : 'bottom-0 right-0 left-0 md:bottom-6 md:right-6 md:left-auto w-full md:w-96 h-[85vh] md:h-[600px] md:rounded-lg rounded-t-lg'
+      }`}>
+      
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
+      <div className="flex items-center justify-between p-3 md:p-4 border-b bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5" />
-          <h3 className="font-semibold">AI Assistant</h3>
+          <Sparkles className="w-4 h-4 md:w-5 md:h-5 animate-pulse" />
+          <h3 className="font-semibold text-sm md:text-base">AI Assistant</h3>
           {currentTask && (
-            <span className="text-xs bg-white/20 px-2 py-0.5 rounded">
+            <span className="text-xs bg-white/20 px-2 py-0.5 rounded animate-fadeIn">
               Helping with task
             </span>
           )}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 md:gap-2">
           <Button
             onClick={() => setIsMinimized(!isMinimized)}
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-white/20"
+            className="text-white hover:bg-white/20 transition-all duration-200"
           >
             {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
           </Button>
@@ -145,7 +148,7 @@ export default function ChatAssistant({ currentTask, allTasks = [] }: ChatAssist
             onClick={() => setIsOpen(false)}
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-white/20"
+            className="text-white hover:bg-white/20 transition-all duration-200"
           >
             <X className="w-4 h-4" />
           </Button>
@@ -155,17 +158,18 @@ export default function ChatAssistant({ currentTask, allTasks = [] }: ChatAssist
       {!isMinimized && (
         <>
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 h-[420px]">
-            {messages.map((message) => (
+          <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 h-[350px] md:h-[420px] hide-scrollbar">
+            {messages.map((message, index) => (
               <div
                 key={message.id}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                style={{ animationDelay: `${index * 0.05}s` }}
+                className={`flex animate-fadeIn ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
+                  className={`max-w-[85%] md:max-w-[80%] rounded-lg p-3 transition-all duration-200 hover:scale-105 ${
                     message.role === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-800'
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-800 shadow-sm'
                   }`}
                 >
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -177,9 +181,12 @@ export default function ChatAssistant({ currentTask, allTasks = [] }: ChatAssist
             ))}
             
             {loading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 rounded-lg p-3">
-                  <Loader2 className="w-5 h-5 animate-spin text-gray-600" />
+              <div className="flex justify-start animate-fadeIn">
+                <div className="bg-gradient-to-r from-gray-100 to-gray-50 rounded-lg p-3 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-5 h-5 animate-spin text-purple-600" />
+                    <span className="text-sm text-gray-600 animate-pulse">Thinking...</span>
+                  </div>
                 </div>
               </div>
             )}
@@ -189,14 +196,14 @@ export default function ChatAssistant({ currentTask, allTasks = [] }: ChatAssist
 
           {/* Quick Actions */}
           {messages.length <= 2 && (
-            <div className="px-4 pb-2">
+            <div className="px-3 md:px-4 pb-2 animate-fadeIn">
               <p className="text-xs text-gray-500 mb-2">Quick actions:</p>
               <div className="flex flex-wrap gap-2">
                 {quickActions.map((action, index) => (
                   <button
                     key={index}
                     onClick={() => handleQuickAction(action)}
-                    className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-colors"
+                    className="text-xs bg-gradient-to-r from-gray-100 to-gray-50 hover:from-blue-100 hover:to-purple-100 px-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
                   >
                     {action}
                   </button>
@@ -206,20 +213,21 @@ export default function ChatAssistant({ currentTask, allTasks = [] }: ChatAssist
           )}
 
           {/* Input */}
-          <div className="p-4 border-t">
+          <div className="p-3 md:p-4 border-t bg-gray-50">
             <div className="flex gap-2">
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                onKeyPress={(e) => e.key === 'Enter' && !loading && handleSend()}
                 placeholder="Ask me anything..."
                 disabled={loading}
-                className="flex-1"
+                className="flex-1 text-sm md:text-base transition-all duration-200 focus:ring-2 focus:ring-purple-500"
               />
               <Button
                 onClick={handleSend}
                 disabled={loading || !input.trim()}
                 size="icon"
+                className="shrink-0 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-200 hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4" />
               </Button>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Mic, MicOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -12,6 +12,7 @@ interface VoiceInputProps {
 export default function VoiceInput({ onTranscript, disabled }: VoiceInputProps) {
   const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const recognitionRef = useRef<any>(null);
 
   const startListening = () => {
     // Check browser support
@@ -25,9 +26,13 @@ export default function VoiceInput({ onTranscript, disabled }: VoiceInputProps) 
     }
 
     const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
     recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.interimResults = true;
     recognition.lang = 'en-US';
+    if ('processLocally' in recognition) {
+      recognition.processLocally = true;
+    }
 
     recognition.onstart = () => {
       setIsListening(true);
@@ -36,17 +41,30 @@ export default function VoiceInput({ onTranscript, disabled }: VoiceInputProps) 
 
     recognition.onend = () => {
       setIsListening(false);
+      recognitionRef.current = null;
     };
 
     recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      onTranscript(transcript);
+      const transcript = Array.from(event.results)
+        .map((result: any) => result[0]?.transcript || '')
+        .join(' ')
+        .trim();
+
+      if (transcript) {
+        onTranscript(transcript);
+        recognition.stop();
+      }
     };
 
     recognition.onerror = (event: any) => {
       setIsListening(false);
+      if (event.error === 'network') {
+        setError('Voice input is temporarily unavailable. Please type your task instead.');
+        return;
+      }
+
       setError('Error: ' + event.error);
-      console.error('Speech recognition error:', event.error);
+      console.warn('Speech recognition error:', event.error);
     };
 
     try {
@@ -60,6 +78,7 @@ export default function VoiceInput({ onTranscript, disabled }: VoiceInputProps) 
   return (
     <div className="flex flex-col items-center gap-2">
       <Button
+        type="button"
         onClick={startListening}
         disabled={disabled || isListening}
         size="lg"

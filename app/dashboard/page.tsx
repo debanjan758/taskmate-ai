@@ -76,17 +76,17 @@ export default function Dashboard() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-red-950">
       <Toaster position="top-right" />
 
       <div className="max-w-7xl mx-auto p-6 md:p-8">
         {/* Header */}
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            TaskMate AI
+        <header className="mb-8 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-2xl p-6 border border-red-900/30 shadow-xl shadow-red-500/20">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-red-500 via-amber-400 to-blue-400 bg-clip-text text-transparent mb-2 tracking-wide">
+            ⚡ AVENGERS TASKMATE ⚡
           </h1>
-          <p className="text-gray-600">
-            Your AI-powered productivity companion
+          <p className="text-amber-300/80 font-semibold">
+            Your AI-powered productivity companion with unlimited power
           </p>
         </header>
 

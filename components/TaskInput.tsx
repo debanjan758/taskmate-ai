@@ -87,9 +87,14 @@ export default function TaskInput({ onTaskCreated }: TaskInputProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-      <div className="flex gap-4 items-center">
-        <div className="flex-1">
+    <div className="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 rounded-2xl shadow-2xl shadow-red-500/30 p-6 border border-red-900/40 relative overflow-hidden">
+      {/* Energy glow effect */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
+        background: 'radial-gradient(circle at top right, rgba(255,215,0,0.2) 0%, transparent 70%)'
+      }}></div>
+      <div className="relative z-10">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="w-full flex-1">
           <Input
             type="text"
             value={input}
@@ -103,35 +108,38 @@ export default function TaskInput({ onTaskCreated }: TaskInputProps) {
             }}
             placeholder="Tell me what you need to do... (e.g., 'Finish project report by Friday')"
             disabled={loading}
-            className="text-lg h-12"
+            className="h-12 text-base sm:text-lg"
           />
         </div>
 
-        <VoiceInput onTranscript={handleVoiceTranscript} disabled={loading} />
+        <div className="flex w-full items-center gap-3 sm:w-auto">
+          <VoiceInput onTranscript={handleVoiceTranscript} disabled={loading} />
 
-        <Button
-          onClick={() => handleSubmit(input)}
-          disabled={loading || !input.trim()}
-          size="lg"
-          className="h-12 px-6"
-        >
-          {loading ? (
-            <span className="flex items-center gap-2">
-              <span className="animate-spin">⏳</span>
-              Processing...
-            </span>
-          ) : (
-            <span className="flex items-center gap-2">
-              <Send className="w-4 h-4" />
-              Add Task
-            </span>
-          )}
-        </Button>
+          <Button
+            onClick={() => handleSubmit(input)}
+            disabled={loading || !input.trim()}
+            size="lg"
+            className="h-12 flex-1 px-5 sm:flex-none sm:px-6"
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <span className="animate-spin">⏳</span>
+                Processing...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <Send className="w-4 h-4" />
+                Add Task
+              </span>
+            )}
+          </Button>
+        </div>
       </div>
 
-      <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
-        <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-        <span>Powered by Google Gemini AI</span>
+      </div>
+      <div className="mt-4 flex items-center gap-2 text-sm text-amber-400 font-semibold tracking-wider">
+        <span className="inline-block w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+        <span>⚡ Powered by Avengers AI</span>
       </div>
     </div>
   );

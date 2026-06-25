@@ -24,7 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-red-950 relative overflow-hidden">
+          {/* Avengers Energy Grid Background */}
+          <div className="fixed inset-0 opacity-10 pointer-events-none" style={{
+            backgroundImage: 'linear-gradient(90deg, transparent 1px, rgba(255,215,0,0.3) 1px), linear-gradient(rgba(255,215,0,0.3) 1px, transparent 1px)',
+            backgroundSize: '50px 50px'
+          }}></div>
           {children}
         </div>
 

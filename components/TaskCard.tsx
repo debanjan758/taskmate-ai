@@ -58,8 +58,8 @@ export default function TaskCard({
 
   return (
     <Card
-      className={`p-4 hover:shadow-md transition-all ${
-        isCompleted ? "opacity-60 bg-gray-50" : ""
+      className={`p-4 hover:shadow-xl hover:shadow-red-500/50 transition-all border border-red-900/30 ${
+        isCompleted ? "opacity-60 bg-gray-900 border-green-900/50" : "bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800"
       }`}
     >
       <div className="flex items-start justify-between gap-4">

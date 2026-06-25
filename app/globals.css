@@ -49,72 +49,72 @@
 }
 
 :root {
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --card: #1a1f2e;
+  --card-foreground: #f0f4f8;
+  --popover: #0f1419;
+  --popover-foreground: #f0f4f8;
+  --primary: #dc143c;
+  --primary-foreground: #ffffff;
+  --secondary: #4169e1;
+  --secondary-foreground: #ffffff;
+  --muted: #2d3d52;
+  --muted-foreground: #a0afc4;
+  --accent: #ffd700;
+  --accent-foreground: #0f1419;
+  --destructive: #ff6b6b;
+  --border: #3d4a5c;
+  --input: #0f1419;
+  --ring: #4169e1;
+  --chart-1: #ff1744;
+  --chart-2: #2196f3;
+  --chart-3: #ffd700;
+  --chart-4: #c41e3a;
+  --chart-5: #1e3a8a;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --sidebar: #0f1419;
+  --sidebar-foreground: #f0f4f8;
+  --sidebar-primary: #dc143c;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ffd700;
+  --sidebar-accent-foreground: #0f1419;
+  --sidebar-border: #3d4a5c;
+  --sidebar-ring: #4169e1;
+  --background: #0a0e1a;
+  --foreground: #f0f4f8;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #0a0e1a;
+  --foreground: #f0f4f8;
+  --card: #1a1f2e;
+  --card-foreground: #f0f4f8;
+  --popover: #0f1419;
+  --popover-foreground: #f0f4f8;
+  --primary: #dc143c;
+  --primary-foreground: #ffffff;
+  --secondary: #4169e1;
+  --secondary-foreground: #ffffff;
+  --muted: #2d3d52;
+  --muted-foreground: #a0afc4;
+  --accent: #ffd700;
+  --accent-foreground: #0f1419;
+  --destructive: #ff1744;
+  --border: #3d4a5c;
+  --input: #0f1419;
+  --ring: #4169e1;
+  --chart-1: #ff1744;
+  --chart-2: #2196f3;
+  --chart-3: #ffd700;
+  --chart-4: #c41e3a;
+  --chart-5: #1e3a8a;
+  --sidebar: #0f1419;
+  --sidebar-foreground: #f0f4f8;
+  --sidebar-primary: #dc143c;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ffd700;
+  --sidebar-accent-foreground: #0f1419;
+  --sidebar-border: #3d4a5c;
+  --sidebar-ring: #4169e1;
 }
 
 @layer base {
@@ -127,4 +127,145 @@
   html {
     @apply font-sans;
   }
+}
+
+/* Smooth Transitions */
+* {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Card Hover Effects */
+.card-hover {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Press Effect */
+button:active {
+  transform: scale(0.98);
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Slide In from Bottom */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out;
+}
+
+/* Pulse Glow */
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.animate-pulseGlow {
+  animation: pulseGlow 2s infinite;
+}
+
+/* Skeleton Loading */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Avengers Energy Glow Animations */
+@keyframes energyPulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), inset 0 0 10px rgba(255, 215, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), inset 0 0 20px rgba(255, 215, 0, 0.2);
+  }
+}
+
+@keyframes redEnergyGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(220, 20, 60, 0.4), inset 0 0 10px rgba(220, 20, 60, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(220, 20, 60, 0.8), inset 0 0 20px rgba(220, 20, 60, 0.2);
+  }
+}
+
+@keyframes blueEnergyGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(65, 105, 225, 0.4), inset 0 0 10px rgba(65, 105, 225, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(65, 105, 225, 0.8), inset 0 0 20px rgba(65, 105, 225, 0.2);
+  }
+}
+
+.avengers-glow {
+  animation: energyPulse 2s ease-in-out infinite;
+}
+
+.avengers-red {
+  animation: redEnergyGlow 2s ease-in-out infinite;
+}
+
+.avengers-blue {
+  animation: blueEnergyGlow 2s ease-in-out infinite;
+}
+@keyframes checkmark {
+  0% {
+    stroke-dashoffset: 50;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-checkmark {
+  stroke-dasharray: 50;
+  animation: checkmark 0.5s ease-out forwards;
 }
