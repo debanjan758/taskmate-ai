@@ -1,5 +1,6 @@
 "use client";
 
+import MoodSelector from "@/components/MoodSelector";
 import ProcrastinationAlert from "@/components/ProcrastinationAlert";
 import DifficultyBadge from "@/components/DifficultyBadge";
 import BreakReminder from "@/components/BreakReminder";
@@ -185,6 +186,15 @@ export default function TaskFocusPage() {
         </div>
 
         <DifficultyBadge task={task} showDetails={false} />
+
+        <div className="mb-6">
+          <MoodSelector
+            tasks={allTasks.filter((t) => t.status !== "completed")}
+            onTaskSelected={(selectedTask) => {
+              router.push(`/task/${selectedTask.id}`);
+            }}
+          />
+        </div>
 
         {/* 🌟 UNIQUE: Procrastination Detection */}
         {viewCount >= 3 && (

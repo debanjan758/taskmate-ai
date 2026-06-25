@@ -18,7 +18,7 @@ export async function getChatResponse(
   currentTask?: Task,
   allTasks: Task[] = []
 ): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
   // Build context
   let context = `You are TaskMate AI, a helpful productivity assistant. You help users manage and complete their tasks efficiently.
@@ -87,7 +87,7 @@ export async function getTaskGuidance(
   task: Task,
   question: string
 ): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
   const prompt = `You are helping a user complete this task:
 
@@ -116,7 +116,7 @@ export async function suggestNextAction(
   task: Task,
   completedSubtasks: string[] = []
 ): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
   const prompt = `User is working on this task:
 
@@ -145,7 +145,7 @@ export async function getMotivation(
   completedToday: number,
   timeOfDay: 'morning' | 'afternoon' | 'evening'
 ): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
   const prompt = `Generate a short, motivational message for a user who has completed ${completedToday} tasks today. 
 It's currently ${timeOfDay}. 
@@ -173,7 +173,7 @@ export async function analyzeStuckStatus(
   const percentageSpent = (timeSpent / expectedTime) * 100;
 
   if (percentageSpent > 150) { // Spent 50% more time than estimated
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `A user has been working on this task for ${timeSpent} minutes, but it was estimated to take ${expectedTime} minutes.
 

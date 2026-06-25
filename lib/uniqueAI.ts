@@ -20,58 +20,31 @@ export async function suggestTaskByMood(
     return { recommendedTask: null, reasoning: '', alternatives: [] };
   }
 
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-  const tasksInfo = tasks
-    .filter(t => t.status === 'pending')
-    .map((t, i) => `${i + 1}. ${t.title} (${t.category}, ${t.estimatedDuration}min, ${t.priority.level} priority)`)
-    .join('\n');
-
-  const prompt = `User is feeling ${mood} right now.
-
-Available tasks:
-${tasksInfo}
-
-Based on their mood, which task should they work on? Consider:
-- Energetic: Complex, challenging tasks
-- Focused: Deep work, important tasks
-- Tired: Simple, mechanical tasks
-- Creative: Open-ended, brainstorming tasks
-- Stressed: Easy wins, calming tasks
-
-Return ONLY valid JSON:
-{
-  "taskIndex": 0,
-  "reasoning": "Why this task matches their mood",
-  "alternativeIndexes": [1, 2]
-}`;
-
-  try {
-    const result = await model.generateContent(prompt);
-    const response = result.response.text();
-    let cleaned = response.trim();
-    if (cleaned.startsWith('```')) {
-      cleaned = cleaned.replace(/```json\n?/g, '').replace(/```\n?/g, '');
-    }
-    
-    const parsed = JSON.parse(cleaned);
-    const pendingTasks = tasks.filter(t => t.status === 'pending');
-    
-    return {
-      recommendedTask: pendingTasks[parsed.taskIndex] || pendingTasks[0],
-      reasoning: parsed.reasoning,
-      alternatives: parsed.alternativeIndexes
-        .map((idx: number) => pendingTasks[idx])
-        .filter(Boolean)
-    };
-  } catch (error) {
-    console.error("Error in mood matching:", error);
-    return {
-      recommendedTask: tasks.filter(t => t.status === 'pending')[0] || null,
-      reasoning: "Start with the highest priority task",
-      alternatives: []
-    };
+  const pendingTasks = tasks.filter((task) => task.status === 'pending');
+  if (pendingTasks.length === 0) {
+    return { recommendedTask: null, reasoning: 'No pending tasks available', alternatives: [] };
   }
+
+  const priorityWeight = { critical: 4, high: 3, medium: 2, low: 1 } as const;
+  const scoreTask = (task: Task) => {
+    const priorityScore = priorityWeight[task.priority.level] ?? 2;
+    const duration = task.estimatedDuration || 60;
+
+    if (mood === 'energetic') return priorityScore * 10 + duration / 10;
+    if (mood === 'focused') return priorityScore * 10 + (task.deadline ? 5 : 0);
+    if (mood === 'tired') return priorityScore * 10 - duration / 10;
+    if (mood === 'creative') return priorityScore * 10 + (task.category === 'personal' || task.category === 'other' ? 5 : 0);
+    return priorityScore * 10 - (task.deadline ? 0 : 2) - duration / 20;
+  };
+
+  const sortedTasks = [...pendingTasks].sort((a, b) => scoreTask(b) - scoreTask(a));
+  const recommendedTask = sortedTasks[0];
+
+  return {
+    recommendedTask,
+    reasoning: `Best match for a ${mood} mood based on priority and task fit`,
+    alternatives: sortedTasks.slice(1, 3),
+  };
 }
 
 /**
@@ -88,7 +61,7 @@ export async function detectProcrastination(
   suggestion: string;
   technique: string;
 }> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `Analyze if user is procrastinating on this task:
 
@@ -137,7 +110,7 @@ export async function estimateTaskDifficulty(
   factors: string[];
   tips: string[];
 }> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `Estimate the difficulty of this task:
 
@@ -188,7 +161,7 @@ export async function suggestBreak(
   activity: string;
   reasoning: string;
 }> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `User has been working for ${minutesWorked} minutes, completed ${tasksCompleted} tasks.
 Current task difficulty: ${currentTaskDifficulty}
@@ -244,7 +217,7 @@ export async function analyzeProductivityPattern(
   insights: string[];
   recommendations: string[];
 }> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const completedTasks = tasks.filter(t => t.status === 'completed');
   
@@ -303,7 +276,7 @@ export async function suggestFocusSound(
   reason: string;
   youtubeQuery: string;
 }> {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `Suggest focus sound for this task:
 

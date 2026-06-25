@@ -14,7 +14,7 @@ const genAI = new GoogleGenerativeAI(apiKey);
 export async function extractTaskFromInput(userInput: string) {
   console.log("🤖 AI Processing: extractTaskFromInput");
 
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
 You are a task management AI assistant. Extract structured task information from user input.
@@ -68,7 +68,7 @@ Rules:
 export async function calculatePriority(task: any, context?: any) {
   console.log("🤖 AI Processing: calculatePriority");
 
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
 Analyze this task and calculate a priority score.
@@ -115,7 +115,7 @@ export async function testGeminiConnection() {
 
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-lite",
+      model: "gemini-2.5-flash",
     });
     const result = await model.generateContent("Say hello!");
     return {
@@ -139,7 +139,7 @@ export async function breakdownTask(task: {
 }): Promise<string[]> {
   console.log("🤖 AI Processing: breakdownTask");
 
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
 Break down this task into 3-5 specific, actionable subtasks.
@@ -193,7 +193,7 @@ export async function calculateEnhancedPriority(
   console.log("🤖 AI Processing: calculateEnhancedPriority");
   console.log("⏳ Analyzing urgency...");
   console.log("✅ Priority analysis complete");
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const now = new Date();
   const deadline = task.deadline ? new Date(task.deadline) : null;
@@ -297,7 +297,7 @@ export async function suggestTimeSlots(
   console.log("⏳ Finding optimal schedule...");
   console.log("✅ Time slots generated");
 
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const now = new Date();
   const deadline = task.deadline ? new Date(task.deadline) : null;
@@ -373,7 +373,7 @@ export async function getTaskTips(task: any): Promise<string[]> {
   console.log("⏳ Generating productivity tips...");
   console.log("✅ Tips generated");
 
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
 Provide 3 helpful tips for completing this task efficiently.
